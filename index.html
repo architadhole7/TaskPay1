@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskBot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .error {
+            color: red;
+        }
+        .language-buttons {
+            margin-bottom: 30px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="languageSelection">
+        <h1>Please choose your language / దయచేసి మీ భాషను ఎంచుకోండి / कृपया अपनी भाषा चुनें</h1>
+        <div class="language-buttons">
+            <button onclick="selectLanguage('en')">English</button>
+            <button onclick="selectLanguage('te')">తెలుగు</button>
+            <button onclick="selectLanguage('hi')">हिन्दी</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="loginFormContainer">
+        <h1 id="loginHeading">మీ ఫోన్ నంబర్ కొట్టండి</h1>
+        <form id="loginForm">
+            <input type="text" id="mobile" placeholder="Enter your mobile number" required>
+            <button type="submit" id="loginButton">Login</button>
+        </form>
+        <p id="error" class="error"></p>
+    </div>
+
+    <script>
+        // Language texts
+        const translations = {
+            en: {
+                heading: "Enter your phone number",
+                placeholder: "Enter your mobile number",
+                button: "Login",
+                error: "Please enter a valid mobile number."
+            },
+            te: {
+                heading: "మీ ఫోన్ నంబర్ కొట్టండి",
+                placeholder: "మీ మొబైల్ నంబర్ ను నమోదు చేయండి",
+                button: "లాగిన్",
+                error: "దయచేసి సరైన మొబైల్ నంబర్ ను నమోదు చేయండి."
+            },
+            hi: {
+                heading: "अपना फोन नंबर डालें",
+                placeholder: "अपना मोबाइल नंबर दर्ज करें",
+                button: "लॉग इन",
+                error: "कृपया एक वैध मोबाइल नंबर दर्ज करें।"
+            }
+        };
+
+        // Handle language selection
+        function selectLanguage(lang) {
+            localStorage.setItem('language', lang);
+            document.getElementById('languageSelection').classList.add('hidden');
+            document.getElementById('loginFormContainer').classList.remove('hidden');
+            
+            // Update UI with selected language
+            const texts = translations[lang];
+            document.getElementById('loginHeading').textContent = texts.heading;
+            document.getElementById('mobile').placeholder = texts.placeholder;
+            document.getElementById('loginButton').textContent = texts.button;
+            document.getElementById('error').textContent = '';
+        }
+
+        // Check if language is already selected
+        const savedLanguage = localStorage.getItem('language');
+        if (savedLanguage) {
+            selectLanguage(savedLanguage);
+        }
+
+        // Handle form submission
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const mobile = document.getElementById('mobile').value;
+            if (mobile && mobile.length === 10) {
+                localStorage.setItem('mobile', mobile);
+                window.location.href = 'dashboard.html';
+            } else {
+                const lang = localStorage.getItem('language') || 'en';
+                document.getElementById('error').textContent = translations[lang].error;
+            }
+        });
+    </script>
+</body>
+</html>
