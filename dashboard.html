@@ -157,12 +157,12 @@
 </head>
 <body>
     <header>
-        <h1>My TaskPay Dashboard</h1>
+        <h1 id="dashboardTitle">My TaskPay Dashboard</h1>
         <div class="user-info" id="userPhone">+919876543210</div>
     </header>
     
     <div class="stats">
-        <h3>Your Earnings</h3>
+        <h3 id="earningsTitle">Your Earnings</h3>
         <div class="balance" id="totalEarnings">₹1,850.00</div>
         <button class="btn" id="withdrawBtn">Withdraw Earnings</button>
     </div>
@@ -172,13 +172,90 @@
     </div>
     
     <div style="text-align: center; margin-top: 2rem;">
-        <a href="index.html" class="btn btn-danger">Back to Login</a>
+        <a href="index.html" class="btn btn-danger" id="backBtn">Back to Login</a>
     </div>
 
     <script>
+        // Language translations
+        const translations = {
+            en: {
+                title: "My TaskPay Dashboard",
+                earnings: "Your Earnings",
+                withdraw: "Withdraw Earnings",
+                back: "Back to Login",
+                taskTypes: {
+                    voice: "voice",
+                    image: "image",
+                    video: "video"
+                },
+                statuses: {
+                    approved: "approved",
+                    pending: "pending",
+                    rejected: "rejected"
+                },
+                date: "Date",
+                reward: "Reward",
+                withdrawConfirm: "Withdraw {amount} to your bank account?",
+                withdrawSuccess: "{amount} withdrawal initiated successfully!",
+                noFunds: "No funds available to withdraw"
+            },
+            te: {
+                title: "నా టాస్క్ పే డాష్బోర్డ్",
+                earnings: "మీ సంపాదన",
+                withdraw: "సంపాదనను డ్రా చేయండి",
+                back: "లాగిన్‌కు తిరిగి వెళ్లండి",
+                taskTypes: {
+                    voice: "వాయిస్",
+                    image: "ఇమేజ్",
+                    video: "వీడియో"
+                },
+                statuses: {
+                    approved: "ఆమోదించబడింది",
+                    pending: "పెండింగ్‌లో ఉంది",
+                    rejected: "తిరస్కరించబడింది"
+                },
+                date: "తేదీ",
+                reward: "రివార్డ్",
+                withdrawConfirm: "మీ బ్యాంక్ ఖాతాకు {amount} డ్రా చేయాలనుకుంటున్నారా?",
+                withdrawSuccess: "{amount} డ్రా విజయవంతంగా ప్రారంభించబడింది!",
+                noFunds: "డ్రా చేయడానికి డబ్బు లేదు"
+            },
+            hi: {
+                title: "मेरा टास्कपे डैशबोर्ड",
+                earnings: "आपकी कमाई",
+                withdraw: "कमाई निकालें",
+                back: "लॉगिन पर वापस जाएं",
+                taskTypes: {
+                    voice: "आवाज",
+                    image: "छवि",
+                    video: "वीडियो"
+                },
+                statuses: {
+                    approved: "स्वीकृत",
+                    pending: "लंबित",
+                    rejected: "अस्वीकृत"
+                },
+                date: "तारीख",
+                reward: "इनाम",
+                withdrawConfirm: "क्या आप {amount} अपने बैंक खाते में निकालना चाहते हैं?",
+                withdrawSuccess: "{amount} निकासी सफलतापूर्वक शुरू की गई!",
+                noFunds: "निकालने के लिए कोई धन उपलब्ध नहीं है"
+            }
+        };
+
+        // Format currency in Indian Rupees
+        function formatRupees(amount) {
+            return '₹' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+
+        // Get user data from localStorage
+        const userPhone = localStorage.getItem('mobile') || "+919876543210";
+        const userLanguage = localStorage.getItem('language') || 'en';
+        const currentTranslations = translations[userLanguage];
+
         // User data (in a real app, this would come from your database)
         const userData = {
-            phone: "+919876543210",
+            phone: userPhone,
             balance: 310.00,
             tasks: [
                 {
@@ -205,19 +282,23 @@
             ]
         };
 
-        // Format currency in Indian Rupees
-        function formatRupees(amount) {
-            return '₹' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-        }
-
         // DOM elements
+        const dashboardTitleEl = document.getElementById('dashboardTitle');
         const userPhoneEl = document.getElementById('userPhone');
+        const earningsTitleEl = document.querySelector('.stats h3');
         const totalEarningsEl = document.getElementById('totalEarnings');
         const withdrawBtn = document.getElementById('withdrawBtn');
         const tasksContainer = document.getElementById('tasksContainer');
+        const backBtn = document.getElementById('backBtn');
 
         // Initialize dashboard
         function initDashboard() {
+            // Set language-specific texts
+            dashboardTitleEl.textContent = currentTranslations.title;
+            earningsTitleEl.textContent = currentTranslations.earnings;
+            withdrawBtn.textContent = currentTranslations.withdraw;
+            backBtn.textContent = currentTranslations.back;
+            
             // Set user phone
             userPhoneEl.textContent = userData.phone;
             
@@ -239,18 +320,22 @@
                 const taskCard = document.createElement('div');
                 taskCard.className = `task-card ${task.status}`;
                 
+                // Get translated task type and status
+                const translatedType = currentTranslations.taskTypes[task.type];
+                const translatedStatus = currentTranslations.statuses[task.status];
+                
                 taskCard.innerHTML = `
                     <div class="task-header">
-                        <span class="task-type">${task.type}</span>
-                        <span class="status ${task.status}">${task.status}</span>
+                        <span class="task-type">${translatedType}</span>
+                        <span class="status ${task.status}">${translatedStatus}</span>
                     </div>
                     <div class="task-details">
                         <p>
-                            <span>Date:</span>
+                            <span>${currentTranslations.date}:</span>
                             <span>${task.date}</span>
                         </p>
                         <p>
-                            <span>Reward:</span>
+                            <span>${currentTranslations.reward}:</span>
                             <span class="reward">${formatRupees(task.reward)}</span>
                         </p>
                     </div>
@@ -263,13 +348,16 @@
         // Withdraw earnings function
         function withdrawEarnings() {
             if (userData.balance > 0) {
-                if (confirm(`Withdraw ${formatRupees(userData.balance)} to your bank account?`)) {
-                    alert(`${formatRupees(userData.balance)} withdrawal initiated successfully!\n`);
+                const confirmMsg = currentTranslations.withdrawConfirm.replace('{amount}', formatRupees(userData.balance));
+                const successMsg = currentTranslations.withdrawSuccess.replace('{amount}', formatRupees(userData.balance));
+                
+                if (confirm(confirmMsg)) {
+                    alert(successMsg);
                     userData.balance = 0;
                     totalEarningsEl.textContent = formatRupees(0);
                 }
             } else {
-                alert("No funds available to withdraw");
+                alert(currentTranslations.noFunds);
             }
         }
 
