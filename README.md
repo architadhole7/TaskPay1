@@ -8,16 +8,16 @@ PROBLEM STATEMENT
 
 PROPOSED SOLUTION 
 A serverless platform where workers:  
-1. Text `HI` to our number  
+1. Text `HI or 1` to our number  
 2. Complete microtasks (voice recordings, local photos) via SMS/MMS  
-3. Earn instant UPI payments (as low as ₹10 per task)  
+3. Earn instant UPI payments (as low as ₹20 per task)  
 
 TECH STACK
-- **Frontend**: Twilio SMS API, WhatsApp Business  
+- **Frontend**: Twilio SMS API, HTML/CSS/JS
 - **Backend**: Firebase Cloud Functions (Node.js), Firestore  
-- **Payments**: Razorpay UPI (Phase 2)  
-- **AI Pipeline**: Python data cleaning scripts
+- **Payments**: Razorpay UPI (enhancement)  
 
-Contact email: lalasa0613@gmail.com
-               architadhole7@gmail.com
-               kathurisameeksha@gmail.com
+Contact email: 
+lalasa0613@gmail.com
+architadhole7@gmail.com
+kathurisameeksha@gmail.com
